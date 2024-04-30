@@ -3,14 +3,15 @@ import { getBrandAPI, getTotalPage } from "../api/brand";
 import Table from 'react-bootstrap/Table';
 import ReactPaginate from 'react-paginate';
 import ModalAddBrand from './ModalAddBrand';
-//  import ModalEdit from './ModalEdit';
-//  import ModalDelete from "./ModalDelete"
-import _ from 'lodash';
+import ModalEdit from './ModalEdit'; 
+//import ModalDelete from "./ModalDelete"
+import _, { debounce } from 'lodash';
 // import './Brand.css';
 
 const Brand = () => {
     const [Brand, setBrand] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
+    const [currentPage, setCurrentPage] = useState(0);
 
 // add
     const [isShowModalAddBrand, setIsShowModalAddBrand] = useState(false);
@@ -26,12 +27,10 @@ const Brand = () => {
         setIsShowModalEditBrand(false);
         setIsShowModalDelteBrand(false);
     };
-   
-    const fetchTotalPages = async () => {
-        const total = await getTotalPage();
-        setTotalPages(total);
+    const handUpdateBrand = (user) =>{
+        setBrand([user , ...Brand]);
     }
-
+   
     useEffect(() => {
         fetchBrand(1);
         fetchTotalPages();
@@ -41,8 +40,28 @@ const Brand = () => {
         setBrand(fetchedBrand);
       
     }
+
+    const fetchTotalPages = async () => {
+        const total = await getTotalPage();
+        setTotalPages(total);
+    }
+
     const handlePageClick = (event) => {
         fetchBrand(+event.selected +1);
+    }
+    const handleEdit = (user) =>{
+    setDataBrandEdit(user);
+    setIsShowModalEditBrand(true)
+    }
+    const handleDelete = (user) => {
+        setDataBrandDelete(user);
+        setIsShowModalDelteBrand(true)
+    }
+    const handleEditFrom = (user) => {
+        let cloneListBrand = _.cloneDeep(Brand);
+        let index = Brand.findIndex(item => item.brandId === user.brandId);
+        cloneListBrand[index].brandName = user.brandName;
+        setBrand(cloneListBrand);
     }
     const handleAddFrom = (user) => {
         let cloneListBrand = _.cloneDeep(Brand);
@@ -50,7 +69,33 @@ const Brand = () => {
         cloneListBrand[index].brandName = user.brandName;
         setBrand(cloneListBrand);
     }
-
+    const handleDeleteFrom = (user) => {
+        let cloneListBrand = [...Brand]; 
+        cloneListBrand = cloneListBrand.filter(item => item.brandId !== user.brandId);
+        setBrand(cloneListBrand);
+    }
+    const hanldSearch = debounce((event) => {
+        let term = event.target.value;
+        if (term) {
+            fetch(`https://localhost:7147/api/brand/search?search=${term}`)
+                .then(response => response.json())
+                .then(data => {
+                    setBrand(data);
+                })
+                .catch(error => {
+                    console.error('Lỗi khi gửi yêu cầu API:', error);
+                });
+        } else {
+            fetch('https://localhost:7147/api/brand')
+                .then(response => response.json())
+                .then(data => {
+                    setBrand(data);
+                })
+                .catch(error => {
+                    console.error('Lỗi khi gửi yêu cầu API:', error);
+                });
+        }
+    },300);
     return (
         <main id="todolist">
          
@@ -68,15 +113,14 @@ const Brand = () => {
           </button>
           
         </div>
-        {/* <div className="col-4 my-3">
+        <div className="col-4 my-3">
             <input className="form-control" 
             placeholder="Search"
-            // value={keyword}
             onChange={(event ) => hanldSearch(event)}
             >
                 
             </input>
-        </div> */}
+        </div>
             <Table striped bordered hover>
                 <thead>
                     <tr>
@@ -122,11 +166,11 @@ const Brand = () => {
                                 <td>
                                     <button 
                                     className="btn btn-warning mx-1"
-                                    // onClick={() => handleEdit(item)}
+                                    onClick={() => handleEdit(item)}
                                     >Edit</button>
                                     <button
                                     className="btn btn-danger"
-                                    // onClick={() => handleDelete(item)}
+                                    onClick={() => handleDelete(item)}
                                     >Delete</button>
                                 </td>
                             </tr>
@@ -140,6 +184,7 @@ const Brand = () => {
                 onPageChange={handlePageClick}
                 pageRangeDisplayed={5}
                 pageCount={totalPages}
+                // Số trang được tính toán từ số items và kích thước trang
                 previousLabel="< previous"
                 breakClassName={'page-item'}
                 breakLinkClassName={'page-link'}
@@ -155,15 +200,16 @@ const Brand = () => {
               <ModalAddBrand
               show={isShowModalAddBrand}
               handleClose={handleClose} 
+              handUpdateBrand={handleAddFrom }
               />
-              {/* <ModalEdit
+              <ModalEdit
               show={isShowModalEditBrand}
               dataBrandEdit={dataBrandEdit}
               handleClose={handleClose}
               handleEditFrom={handleEditFrom }
               />
 
-            <ModalDelete
+            {/* <ModalDelete
             show={isShowModalDeleteBrand}
             handleClose={handleClose}
             dataBrandDelete={dataBrandDelete}
@@ -173,7 +219,7 @@ const Brand = () => {
 
         </main>
     )
-
 }
+
 export default Brand;
  

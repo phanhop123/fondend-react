@@ -14,8 +14,8 @@ export const getTotalPage = () =>{
 export const addBrandAPI = (brandName) =>{
     return axiosClient.post(`${END_POINT.TODOS}`,{brandName});
 }
-export const editBrandAPI = (brandId) =>{
-    return axiosClient.put(`${END_POINT.TODOS}${brandId}`);
+export const editBrandAPI = (brandId ,brandName) =>{
+    return axiosClient.put(`${END_POINT.TODOS}`,{brandId, brandName});
 }
 export const deleteBrandAPI = (brandId) =>{
     return axiosClient.delete(`${END_POINT.TODOS}${brandId}`);

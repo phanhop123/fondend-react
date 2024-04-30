@@ -27,7 +27,12 @@ const ModalAddBrand = (props) =>{
             // toast.success("A Brand is created succeed");
     return(
         <>
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={show}
+            onHide={handleClose}
+            backdrop="static"
+            keyboard={false}
+      >
+            
                 <Modal.Header closeButton>
                     <Modal.Title>Modal title</Modal.Title>
                 </Modal.Header>
