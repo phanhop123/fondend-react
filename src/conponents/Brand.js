@@ -1,24 +1,23 @@
-import { useEffect, useState } from "react";
-import { getBrandAPI, getTotalPage } from "../api/brand";
-import Table from 'react-bootstrap/Table';
-import ReactPaginate from 'react-paginate';
-import ModalAddBrand from './ModalAddBrand';
-import ModalEdit from './ModalEdit'; 
-//import ModalDelete from "./ModalDelete"
-import _, { debounce } from 'lodash';
-// import './Brand.css';
+    import { useEffect, useState } from "react";
+    import { getBrandAPI, getTotalPage } from "../api/brand";
+    import Table from 'react-bootstrap/Table';
+    import ReactPaginate from 'react-paginate';
+    import ModalAddBrand from './ModalAddBrand';
+    import ModalEdit from './ModalEdit'; 
+    import ModalDelete from "./ModalDelete"
+    import _, { debounce } from 'lodash';
+    // import './Brand.css';
 
-const Brand = () => {
+    const Brand = () => {
     const [Brand, setBrand] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
-    const [currentPage, setCurrentPage] = useState(0);
 
-// add
+    // add
     const [isShowModalAddBrand, setIsShowModalAddBrand] = useState(false);
-//edit
+    //edit
     const [isShowModalEditBrand, setIsShowModalEditBrand] = useState(false);
     const [dataBrandEdit, setDataBrandEdit] = useState({});
-//delete
+    //delete
     const [isShowModalDeleteBrand, setIsShowModalDelteBrand] = useState(false);
     const [dataBrandDelete, setDataBrandDelete] = useState({});
 
@@ -27,10 +26,8 @@ const Brand = () => {
         setIsShowModalEditBrand(false);
         setIsShowModalDelteBrand(false);
     };
-    const handUpdateBrand = (user) =>{
-        setBrand([user , ...Brand]);
-    }
    
+
     useEffect(() => {
         fetchBrand(1);
         fetchTotalPages();
@@ -38,7 +35,7 @@ const Brand = () => {
     const fetchBrand = async (page) => {
         const fetchedBrand = await getBrandAPI(page);
         setBrand(fetchedBrand);
-      
+        
     }
 
     const fetchTotalPages = async () => {
@@ -70,7 +67,7 @@ const Brand = () => {
         setBrand(cloneListBrand);
     }
     const handleDeleteFrom = (user) => {
-        let cloneListBrand = [...Brand]; 
+        let cloneListBrand = _.cloneDeep(Brand); 
         cloneListBrand = cloneListBrand.filter(item => item.brandId !== user.brandId);
         setBrand(cloneListBrand);
     }
@@ -98,20 +95,20 @@ const Brand = () => {
     },300);
     return (
         <main id="todolist">
-         
+            
             <div className='my-3 add-Brand d-flex justify-content-between'>
-          <span>
+            <span>
             <h2>
-              <b>List Brand:</b>
+                <b>List Brand:</b>
             </h2>
-          </span>
-          <button
+            </span>
+            <button
             className='btn btn-success'
             onClick={() => setIsShowModalAddBrand(true)}
-          >
-            Add Brand brand
-          </button>
-          
+            >
+            Add brand
+            </button>
+            
         </div>
         <div className="col-4 my-3">
             <input className="form-control" 
@@ -126,32 +123,32 @@ const Brand = () => {
                     <tr>
                         <th>
                             <div className="sort-header">
-                           <span>ID</span>  
-                           {/* <span>
-                             <i class="fa-solid fa-arrow-down-long"
+                            <span>ID</span>  
+                            {/* <span>
+                                <i class="fa-solid fa-arrow-down-long"
                             onClick={() =>{
                                 setSortBy("desc"); 
                                 setSortField("BrandId")} }
 
-                             >
-                             </i>
-                             <i class="fa-solid fa-arrow-up-long"
+                                >
+                                </i>
+                                <i class="fa-solid fa-arrow-up-long"
                             onClick={() =>setSortBy("acs")} 
-                             ></i>
-                             </span> */}
+                                ></i>
+                                </span> */}
                             </div>
-                           
+                            
                         </th>
 
 
-                      
+                        
                         <th>
                         <div className="sort-header">
-                           <span>Brand Name</span>  
-                           {/* <span>
-                             <i class="fa-solid fa-arrow-down-long"></i>
-                             <i class="fa-solid fa-arrow-up-long"></i>
-                             </span> */}
+                            <span>Brand Name</span>  
+                            {/* <span>
+                                <i class="fa-solid fa-arrow-down-long"></i>
+                                <i class="fa-solid fa-arrow-up-long"></i>
+                                </span> */}
                             </div>
                         </th>
                         <td>Actions</td>
@@ -184,7 +181,6 @@ const Brand = () => {
                 onPageChange={handlePageClick}
                 pageRangeDisplayed={5}
                 pageCount={totalPages}
-                // Số trang được tính toán từ số items và kích thước trang
                 previousLabel="< previous"
                 breakClassName={'page-item'}
                 breakLinkClassName={'page-link'}
@@ -197,29 +193,27 @@ const Brand = () => {
                 nextLinkClassName={'page-link'}
                 activeClassName={'active'}
             />
-              <ModalAddBrand
-              show={isShowModalAddBrand}
-              handleClose={handleClose} 
-              handUpdateBrand={handleAddFrom }
-              />
-              <ModalEdit
-              show={isShowModalEditBrand}
-              dataBrandEdit={dataBrandEdit}
-              handleClose={handleClose}
-              handleEditFrom={handleEditFrom }
-              />
-
-            {/* <ModalDelete
-            show={isShowModalDeleteBrand}
-            handleClose={handleClose}
-            dataBrandDelete={dataBrandDelete}
-            handleDeleteFrom= {handleDeleteFrom}
-            /> */}
+                <ModalAddBrand
+                show={isShowModalAddBrand}
+                handleClose={handleClose} 
+                handUpdateBrand={handleAddFrom }
+                />
+                <ModalEdit
+                show={isShowModalEditBrand}
+                dataBrandEdit={dataBrandEdit}
+                handleClose={handleClose}
+                handleEditFrom={handleEditFrom }
+                />
+                <ModalDelete
+                show={isShowModalDeleteBrand}
+                handleClose={handleClose}
+                dataBrandDelete={dataBrandDelete}
+                handleDeleteFrom= {handleDeleteFrom}
+                />
 
 
         </main>
     )
-}
+    }
 
-export default Brand;
- 
+    export default Brand;

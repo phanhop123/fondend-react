@@ -1,24 +1,20 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
-import Brand from './conponents/Brand';
-import Header from './conponents/Header';
-import { Container } from 'react-bootstrap';
+import App from './App';
+
 import 'react-toastify/dist/ReactToastify.css';
+import { BrowserRouter } from 'react-router-dom';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-      <div className='my-3 add-new'>
-    <Header/>
-    <Container >
-    
-      
-    <Brand/> 
-    </Container>
-  
-    </div>
-  </React.StrictMode>
+<React.StrictMode>
+    <BrowserRouter>
+        <App/>
+  </BrowserRouter>
+</React.StrictMode>
 );
+
 
 
