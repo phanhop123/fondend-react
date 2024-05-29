@@ -6,7 +6,6 @@
     import ModalEdit from './ModalEdit'; 
     import ModalDelete from "./ModalDelete"
     import _, { debounce } from 'lodash';
-    // import './Brand.css';
 
     const Brand = () => {
     const [Brand, setBrand] = useState([]);
